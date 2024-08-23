@@ -21,7 +21,8 @@ import os
 #     )
 #     return kdf.derive(password)
 def encrypt_v4(img_path,img_name,key = os.urandom(32)):
-    print(key)
+ #   print(key)
+#    print("image_path"+img_path)
     # Generate a random IV (Initialization Vector)
     iv = os.urandom(16)
     
@@ -31,10 +32,16 @@ def encrypt_v4(img_path,img_name,key = os.urandom(32)):
         encryptor = cipher.encryptor()
     except Exception:
         print('Error caught : ', Exception.__name__)
-    
+  #  print("starting reAding file")
     # Open the input file and create an output file
-    with open(img_path, 'rb') as f:
-        data = f.read()
+    try:
+        with open(img_path, 'rb') as f:
+            data = f.read()
+    except Exception as e:
+        print(e)
+        print("error in loading the image for encryption")
+
+   # print("reading image file done")
     # Pad the data to be a multiple of the block size (16 bytes for AES)
     padder = padding.PKCS7(algorithms.AES.block_size).padder()
     padded_data = padder.update(data) + padder.finalize()
@@ -43,9 +50,15 @@ def encrypt_v4(img_path,img_name,key = os.urandom(32)):
     encrypted_data = encryptor.update(padded_data) + encryptor.finalize()
     encrypted_filename = f"encrypted/{img_name}.enc"
     # Write the IV and encrypted data to the output file
-    with open(encrypted_filename, 'wb') as f:
-        f.write(iv + encrypted_data)
-    print("enc done")
+
+    print("encryption done")
+    try:
+        with open(encrypted_filename, 'wb') as f:
+            f.write(iv + encrypted_data)
+    except Exception as e:
+        print(e)
+        print("not able to write image due to " )
+    print("writing file done")
 
 
 def encrypt_v3(img_path,img_name):

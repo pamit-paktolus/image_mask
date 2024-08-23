@@ -7,6 +7,10 @@ app = Flask(__name__)
 API_KEY = 'YOUR_SECURE_API_KEY'
 
 
+@app.route("/")
+def hello():
+    return "<h1 style = 'color:blue'>Hello There! image masking is running on this port </h1?"
+
 @app.route('/mask_maker_v2', methods=['POST'])
 def apply_mask_to_folder():
     # auth_header = request.headers.get('Authorization')
@@ -136,4 +140,4 @@ def apply_mask_to_folder_filename_only():
     return jsonify({'masked_images_paths': masked_images_paths}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0')

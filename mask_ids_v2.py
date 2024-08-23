@@ -7,7 +7,7 @@ from paddleocr import PaddleOCR,draw_ocr
 
 import re
 
-from utils_v2 import encrypt_v4
+from utils_v2 import encrypt_v4,encrypt_v3
 masked_image_dir = 'masked/'
 do_normalization = True
 do_nltk = False
@@ -169,8 +169,11 @@ def is_valid_doc(text):
     return False
 
 def mask_maker_v2(IMAGE_PATH):
-
-    _,img_full = IMAGE_PATH.rsplit('\\',1)
+    try:
+   	 _,img_full = IMAGE_PATH.rsplit('/',1)
+    except:
+        print(IMAGE_PATH)
+        img_full = IMAGE_PATH
     img_name,ext = img_full.rsplit('.',1)
     valid_doc_list = ['aadhar','pan','dl','passport','voter']
     valid_doc = False
@@ -279,7 +282,8 @@ def mask_maker_v2(IMAGE_PATH):
             try:
                 encrypted_image_path = encrypt_v4(IMAGE_PATH, img_name+'.'+ext)
                 return masked_image_dir + img_name + '_m.'+ext  #returns the masked image   
-            except :
+            except Exception as  e :
+                print(e)
                 return "Not able to encrypt the image"
         except Exception:
             print('Error caught : ', Exception.__name__)
